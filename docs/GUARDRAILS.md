@@ -32,6 +32,12 @@ it resumes. Server processes: gateway/chat/embed/coder.
 - Protected models: `/root/models` + `/sdcard/Download/models` - explicit
   permission from Sunny required to delete/move/overwrite. NOTE.txt present.
 
+## Termux resilience
+Termux is the primary host and must not be killed by the system. Runbook:
+`docs/TERMUX-RESILIENCE.md` (boot wake lock, Doze/appops elevation via
+Shizuku, Samsung "Never sleeping apps", rollback). Run the elevate script
+whenever Shizuku is up: `shizuku sh /sdcard/Download/termux-bridge/termux-elevate.sh`.
+
 ## Network
 - Large downloads (rootfs, toolchains, binaries >50MB) also prefer WiFi: 5G modem TX heats the radio and can spike zone temps to ~95C with zero CPU load; model rule below stays hard WiFi-only.
 - Model downloads: WiFi-only. Confirm the transport is WiFi before

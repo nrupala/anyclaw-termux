@@ -74,4 +74,5 @@ Copyright (c) 2026 Nrupal Akolkar.
 - [Build history](docs/BUILD_HISTORY.md) - the build history chat, appended per session
 - [Backup & recovery](docs/RECOVERY.md) - layered sources, runbook
 - [llama.cpp patches](docs/PATCHES.md) - Termux build patches
+- [Termux resilience](docs/TERMUX-RESILIENCE.md) - keep Termux alive/elevated
 - [Announcement draft](docs/ANNOUNCEMENT.md)
