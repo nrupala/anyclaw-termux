@@ -1,0 +1,50 @@
+# ---- Secrets & credentials - never commit ----
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.tokens
+.env
+.env.*
+!.env.example
+*token*
+*secret*
+*credential*
+*apikey*
+*api_key*
+id_rsa*
+id_ed25519*
+hosts.yml
+.config/
+.ssh/
+.aws/
+.codex/
+.termux/
+
+# ---- Local configs that may embed identifiers ----
+config.json
+config.local.json
+*.local.json
+registry.json
+*.part
+state/
+*.pid
+*.sock
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Build artifacts ----
+build/
+dist/
+node_modules/
+*.o
+*.spv
+*.tgz
+
+# ---- OS ----
+.DS_Store
+Thumbs.db

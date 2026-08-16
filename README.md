@@ -68,3 +68,8 @@ AnyClaw repo (leaked-source lineage) for licensing hygiene.
 Dual-licensed MIT + Apache-2.0 with a commercial-use rider. See LICENSE.md.
 
 Copyright (c) 2026 Nrupal Akolkar.
+
+## Docs
+- [Guard rails](docs/GUARDRAILS.md) - watchdog, heat guard, backups, network rules
+- [Build history](docs/BUILD_HISTORY.md) - the build history chat, appended per session
+- [Announcement draft](docs/ANNOUNCEMENT.md)
