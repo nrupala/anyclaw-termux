@@ -177,3 +177,26 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   via `dumpsys deviceidle whitelist` (shell-side exemption = same effect). If the
   list still feels incomplete, per-app path: Settings > Apps > <app> > Battery >
   "Unrestricted".
+## 2026-08-16 (cont.) — MAVEN ACTIVATED on Termux GPU (user go)
+
+- Maintenance hold lifted (rm /root/maven/state/maintenance); markers
+  external-chat.json + external-embed.json created; bash launch-maven.sh.
+- Termux engines (Vulkan, -ngl 24, -t 4): chat 9090 = phi-4-mini (fa on, ctx
+  8192, slots 4) UP; embed 9096 = nomic-embed (ctx 4096) UP. Both health 200.
+- BUGFIX in scripts/termux-llama-server.sh: `--embedding on` -> `--embedding`
+  (flag takes no value; embed server failed to start with the old arg).
+- proot stack: gateway 9095 (http 302 -> login, pid 29855) + scheduler
+  (pid 29862) UP. Coder engine NOT started: state/thermal-hold present ->
+  launcher coder branch skipped silently (no external-coder marker). Coding
+  (qwen-coder-7b) engine remains off until RAM/hectare review.
+- Live GPU inference verified via 9090 /v1/chat/completions (engine responded).
+- AUDIT (user asked temp/ram/storage):
+  - Temp: max zone 71.6C (cpu-1-1-1), spiked 84.2C during inference, cooling;
+    below 95C alarm zone, above 40C idle target. Watch sustained >80C.
+  - RAM: MemTotal 11.4G, MemAvailable ~1.2G, swap 16G (5.7G used). Termux chat
+    llama-server RSS 1.72G, embed 21M; openclaw-gateway RSS 434M.
+  - Storage: 220G total, 203G used (93%), ~17G free - matches "16GB" reading.
+    /sdcard/Download/models = 17G (model library); recent adds = none beyond
+    models + 363M rootfs backup. No leak; space = models + existing backups.
+  - Optional reclaim (needs Sunny permission, models are protected): offload
+    qwen3-4b 2.5G / llama-3.2 2G / qwen2.5-vl 1.9G+mmproj 1.3G if unused.

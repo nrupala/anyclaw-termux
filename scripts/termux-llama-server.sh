@@ -17,6 +17,6 @@ sleep 2
 echo "starting embed GPU server on 127.0.0.1:${PORT_EMBED} (ngl=24)"
 [ -f "$MODEL_EMBED" ] || cp /sdcard/Download/models/nomic-embed-text-v1.5.Q4_K_M.gguf "$MODEL_EMBED"
 setsid nohup "$BIN" -m "$MODEL_EMBED" --host 127.0.0.1 --port "$PORT_EMBED" \
-  -c 4096 --embedding on -ngl 24 -t 4 > "$HOME/logs/embed-gpu.log" 2>&1 < /dev/null &
+  -c 4096 --embedding -ngl 24 -t 4 > "$HOME/logs/embed-gpu.log" 2>&1 < /dev/null &
 echo $! > "$HOME/state/embed-gpu.pid"
 echo "started. verify: curl -m 5 http://127.0.0.1:9090/v1/models"
