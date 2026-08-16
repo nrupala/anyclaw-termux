@@ -105,3 +105,26 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - Baileys advisory (GHSA-qvv5-jq5g-4cgg): rc.9 still installed (unused - WhatsApp
   off). Plan: pin 7.0.0-rc12+ via npm overrides on WiFi before enabling WhatsApp.
   NOTE proot Milo STILL runs WhatsApp on rc.9 - recommend pinning/disable before use.
+
+## 2026-08-16 (cont.) — Termux env finish: WhatsApp on, baileys rc12, Python/auth confirmed
+
+- WhatsApp ENABLED in Termux openclaw (profile termux): channels.whatsapp.enabled
+  + plugins.entries.whatsapp.enabled = true; dmPolicy=pairing, groupPolicy=open
+  (kept open until real allowlist IDs supplied).
+- Baileys pinned 7.0.0-rc12 (fixes GHSA-qvv5-jq5g-4cgg): global
+  @whiskeysockets/baileys@7.0.0-rc12 installed + nested copy under
+  node_modules/openclaw/node_modules/@whiskeysockets/baileys replaced.
+  Verified: npm ls -g; nested package.json = 7.0.0-rc12; gateway 18790 http 200.
+- Added scripts/re-pin-baileys.sh + ~/.termux/re-pin-baileys.sh: re-apply after
+  any openclaw update (npm overrides alone do not survive a global reinstall).
+- Linking runbook (user step): `openclaw --profile termux channels login
+  --channel whatsapp` (QR in TTY) or Control UI dashboard; verify via
+  `channels status --probe`. NOT YET LINKED.
+- Python in Termux: ALREADY INSTALLED, no action needed (python 3.14.6).
+- codex 0.147.0 native (musl static) in Termux: login status = "Logged in using
+  ChatGPT" (real session, no bypass). Auth/config copied from proot; live JWTs
+  stay on-device, never committed.
+- openclaw skills symlink: ~/.openclaw-termux/skills -> ~/.shared-skills (OK).
+- CONFLICT notice: proot Milo still WhatsApp-enabled on baileys rc.9; one number
+  = one active session. Pin proot Milo to rc12 or disable its WhatsApp before
+  linking Termux Milo.
