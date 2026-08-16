@@ -62,3 +62,10 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - opencode 1.18.18 RUNS in Debian layer (`/root/opencode`) - Andy live in Termux.
 - codex rust-v0.147.0 MUSL STATIC runs NATIVE on bionic (`~/.local/codex/codex`,
   222MB, no interpreter) - Codex live, Debian NOT needed for it.
+
+## 2026-08-16 (cont.) — Crash boundary mapped
+
+- Segfault map (phi-4-mini, Vulkan): ngl=1 p512 OK; ngl=24 p512 OK; ngl=40 p64 OK;
+  ngl=40 p512 CRASH (rc=139); -ngl 999 always crashes. = high-ngl + long-prompt zone.
+- Stable serving config for now: `-ngl 24` (or per-model layer count minus headroom).
+- Headline ngl=24 pp512/tg32 bench pending (auto watcher runs when <=58C).
