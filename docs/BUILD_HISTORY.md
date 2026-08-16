@@ -200,3 +200,25 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
     models + 363M rootfs backup. No leak; space = models + existing backups.
   - Optional reclaim (needs Sunny permission, models are protected): offload
     qwen3-4b 2.5G / llama-3.2 2G / qwen2.5-vl 1.9G+mmproj 1.3G if unused.
+## 2026-08-16 (cont.) — Maven login persistence fixed (user report: booted on refresh)
+
+- Root causes: (1) web app stored the session token ONLY in localStorage and
+  ignored the 7-day cookie the login page sets -> any localStorage loss
+  (storage pressure, browser cleanup, origin change) = 401 on refresh ->
+  hard redirect to /login. (2) Vault DEK is in-memory by design -> refresh
+  always re-asked for master password.
+- Fixes (committed cf2a552 @ nrupala/maven-assistant, main):
+  - web/lib/api.js getToken(): falls back to the 7-day maven_token cookie and
+    migrates it back into localStorage (survives eviction).
+  - gateway.js legacy inline pages (/chat, /keys) got the same fallback.
+  - web/lib/vault.js + web/app.js: "Keep unlocked for 7 days" on the unlock
+    gate (default on); boot auto-restores via tryRemember(); explicit Lock
+    clears the record; idle auto-lock keeps the record.
+- Verified live: cookie-only /api/whoami = 200; /, /chat, /keys serve with
+  cookie and contain the fallback; SPA intact. Gateway restarted (pid file,
+  plugins online) to load the fix.
+- Ops notes: gateway restarted via direct setsid nohup node (launcher was
+  briefly locked by a stuck run: two launch-maven.sh attempts logged "launch
+  skipped: another launcher is running"; cleared). /root/maven launcher files
+  (launch-common.sh, launch-maven.sh, maven-watchdog.sh, maven-build-log.md)
+  have UNCOMMITTED in-progress edits - left untouched.
