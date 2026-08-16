@@ -82,3 +82,13 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   already native (musl static), openclaw/Maven are node-native, llama.cpp GPU
   native. When Bun ships Android support, opencode-native becomes a one-liner.
 - Probe clone kept at /root/probe/o (shallow, sst/opencode@main).
+
+## 2026-08-16 (cont.) — Bench numbers + GPU wiring prep
+
+- Auto-bench (ngl=24, Vulkan, -t 4): pp512 = 11.75 t/s, tg32 = 7.50 t/s.
+  CPU baseline: 4.98 / 2.32 -> ~2.4-3.2x. (ngl=1 earlier: 14.06 / 8.01.)
+- Added scripts/termux-llama-server.sh (chat 9090 + embed 9096 on loopback, ngl=24,
+  -fa on, ctx 8192) + docs/MAVEN-GPU-WIRING.md (markers, resume, rollback).
+  NOT activated - Maven still on maintenance hold; activation when user resumes.
+- Proot agent versions to match in Termux: openclaw 2026.3.8, codex 0.147.0,
+  opencode-ai 1.18.18, codexui-android 0.1.92.
