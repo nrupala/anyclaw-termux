@@ -151,3 +151,29 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   (https protocol, scopes read:org read:user repo user:email workflow).
   Termux can now push to GitHub on its own.
 - OpenClaw skills symlink intact: ~/.openclaw-termux/skills -> ~/.shared-skills.
+## 2026-08-16 (cont.) — WhatsApp linked + Cloudflare identity configured
+
+- WhatsApp LINKED on Termux openclaw (profile termux): session store present at
+  ~/.openclaw-termux/credentials/whatsapp/default (creds.json + signal pre-keys).
+  Gateway log 17:24: starting provider (+17808801326), 17:24:51 "Listening for
+  personal WhatsApp inbound messages." NOTE: `channels status --probe` may
+  briefly report "not linked" right after linking / after gateway restarts; the
+  gateway log + credentials dir are authoritative.
+- PROOT Milo still has WhatsApp enabled on baileys rc.9 - pin to rc12 or disable
+  before use; only ONE active session per number (Termux Milo is now the live
+  WhatsApp path).
+- Cloudflare identity configured + verified:
+  - Token persisted as CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID in
+    /root/.secrets.env and ~/.secrets.env (Termux), chmod 600, sourced from
+    .bashrc/.profile. NEVER committed to git.
+  - Token verify: active. Live Workers AI inference OK: account
+    2edd59d09fd816187b47afbb9ea43af1, model @cf/meta/llama-3.3-70b-instruct-fp8-fast
+    returned completion. codex config.toml [model_providers.cloudflare] already
+    points at this account (env_key CLOUDFLARE_API_TOKEN).
+  - Maven providers.json does NOT include a CF entry; deepseek/offgrid/xform/
+    claude/copilot entries present with api_key placeholders - Maven-side
+    provider wiring still pending user's model choices.
+- Samsung "Never sleeping apps" note: the UI list can omit apps already exempted
+  via `dumpsys deviceidle whitelist` (shell-side exemption = same effect). If the
+  list still feels incomplete, per-app path: Settings > Apps > <app> > Battery >
+  "Unrestricted".
