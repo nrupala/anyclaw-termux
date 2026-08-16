@@ -33,6 +33,7 @@ it resumes. Server processes: gateway/chat/embed/coder.
   permission from Sunny required to delete/move/overwrite. NOTE.txt present.
 
 ## Network
+- Large downloads (rootfs, toolchains, binaries >50MB) also prefer WiFi: 5G modem TX heats the radio and can spike zone temps to ~95C with zero CPU load; model rule below stays hard WiFi-only.
 - Model downloads: WiFi-only. Confirm the transport is WiFi before
   starting/resuming, not merely that WiFi is connected.
 - Health probes are bounded (`curl -m 5`); never `ss` in proot.
