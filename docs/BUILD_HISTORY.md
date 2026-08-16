@@ -128,3 +128,26 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - CONFLICT notice: proot Milo still WhatsApp-enabled on baileys rc.9; one number
   = one active session. Pin proot Milo to rc12 or disable its WhatsApp before
   linking Termux Milo.
+## 2026-08-16 (cont.) — Termux elevation applied + proot->Termux data sync
+
+- Shizuku confirmed up (uid 2000 shell). Ran scripts/termux-elevate.sh:
+  - deviceidle whitelist (verified in `dumpsys deviceidle whitelist`):
+    com.termux, com.termux.api, com.termux.boot, com.termux.gui,
+    moe.shizuku.privileged.api, gptos.intelligence.assistant.
+  - appops allow: RUN_IN_BACKGROUND, RUN_ANY_IN_BACKGROUND, START_FOREGROUND,
+    POST_NOTIFICATION for all 8 candidate packages. All persist across reboots.
+  - Phantom-process-monitor disable kept OFF (device-wide, opt-in).
+- proot -> Termux data sync over tb bridge (tarball, excludes shared_skills/.git
+  link2symlink artifacts):
+  - ~/.shared-skills fully mirrored (.system + shared_skills + termux-ai-stack).
+  - ~/.codex/skills now a symlink to ~/.shared-skills (mirrors proot layout);
+    .codex config/auth/memories/plugins were already identical (mtimes matched).
+  - ~/.ssh: id_ed25519(+pub), id_termux(+pub), known_hosts (authorized_keys kept).
+  - ~/.gitconfig: copied, gh helper path patched /usr/bin/gh ->
+    /data/data/com.termux/files/usr/bin/gh; global identity set
+    nrupala <51525601+nrupala@users.noreply.github.com>.
+  - ~/.config/gh: hosts.yml token copied (device-local, not in git).
+- gh 2.97.0 installed in Termux; `gh auth status` = Logged in as nrupala
+  (https protocol, scopes read:org read:user repo user:email workflow).
+  Termux can now push to GitHub on its own.
+- OpenClaw skills symlink intact: ~/.openclaw-termux/skills -> ~/.shared-skills.
