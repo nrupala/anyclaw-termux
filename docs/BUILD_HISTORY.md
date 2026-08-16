@@ -49,3 +49,16 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - Added native skill `termux-ai-stack` (SKILL.md) in `/root/.codex/skills/` +
   repo `skills/` - tb bridge, build+patches, backups, Maven hold/launch, watchdog,
   WiFi-only downloads. Committed with this entry.
+
+## 2026-08-16 (cont.) — Agents running + GPU bench partial
+
+- Heat root cause: 5G modem TX during big downloads (idle zones ~95C), NOT CPU.
+  Guardrail: large downloads prefer WiFi.
+- GPU bench WORKS: `-ngl 1` pp512=14.06 t/s, tg32=8.01 t/s (CPU baseline 4.98/2.32).
+  FULL offload `-ngl 999` segfaults (rc=139) after Vulkan init - offload-level
+  specific; layer sweep was heat-gated, pending.
+- proot-distro Debian installed in Termux (rootfs at
+  `$PREFIX/var/lib/proot-distro/containers/debian/rootfs` - containers/ layout).
+- opencode 1.18.18 RUNS in Debian layer (`/root/opencode`) - Andy live in Termux.
+- codex rust-v0.147.0 MUSL STATIC runs NATIVE on bionic (`~/.local/codex/codex`,
+  222MB, no interpreter) - Codex live, Debian NOT needed for it.

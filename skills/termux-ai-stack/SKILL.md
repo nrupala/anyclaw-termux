@@ -33,6 +33,12 @@ Authoritative repo: `nrupala/anyclaw-termux` (guardrails, recovery, patches, scr
 - Proot: `/sdcard/Download/backups/backup.sh`; recovery layering in repo `docs/RECOVERY.md`.
 - After restore verify: `node --version`, `sshd`, `vulkaninfo --summary`, `tb status`.
 
+## Agents on Termux
+- codex: `~/.local/codex/codex` (rust-v0.147.0 musl STATIC) - runs native on bionic.
+- opencode: `proot-distro login debian -- /root/opencode` (v1.18.18 glibc) - needs Debian layer;
+  rootfs at `$PREFIX/var/lib/proot-distro/containers/debian/rootfs` (containers/ layout, NOT installed-rootfs/).
+- Debian layer: `pkg install proot-distro && proot-distro install debian`.
+
 ## Maven stack
 - Hold: `touch /root/maven/state/maintenance` (launchers stand down BEFORE sourcing config);
   resume: `rm /root/maven/state/maintenance && bash /root/maven/launch-maven.sh`.

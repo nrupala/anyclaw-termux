@@ -24,11 +24,11 @@ Android OS
    └── Termux (native, bionic)
          ├── nodejs-lts ── openclaw (Milo) · Maven gateway · chat bridge
          ├── llama.cpp (Vulkan/Adreno) ── chat/embed/coder GPU engines
+         ├── codex CLI (musl static, native bionic)
          ├── sshd (tb bridge) · proc-watchdog · boot scripts (Termux:Boot)
          ├── Shizuku (Android API bridge) — planned
          └── proot-distro Debian (glibc layer, minimal)
-               ├── opencode (Andy) — glibc/musl binary
-               └── @openai/codex (Codex) — glibc binary
+               └── opencode (Andy) — glibc binary
 ```
 
 Native Termux hosts everything that runs on Node/Python or is built from source;
@@ -45,8 +45,8 @@ cannot execute directly.
 | llama.cpp Vulkan build (Adreno 830) | Termux native | 🚧 building |
 | nodejs-lts | Termux | ✅ live |
 | openclaw (Milo) | Termux node | ⏳ port pending |
-| opencode (Andy) | Debian glibc layer | ⏳ needs Debian layer (no static build) |
-| @openai/codex (Codex) | Debian glibc layer | ⏳ pending |
+| opencode (Andy) | Debian glibc layer | ✅ running (in Termux Debian) |
+| @openai/codex (Codex) | Termux native (musl static) | ✅ running (v0.147.0) |
 | Maven gateway/scheduler | Termux node/python | ⏳ port last, with fallback |
 
 ## Attribution

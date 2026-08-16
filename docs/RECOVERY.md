@@ -34,6 +34,12 @@ Proot cron runs: `tb exec 'bash ~/.termux/backup-termux.sh'` (daily, log at
 6. Models: verify existing `/sdcard/Download/models`; if missing, WiFi-only via
    `models-download.sh --check` (never delete the NOTE.txt / protected dirs).
 
+## Debian glibc layer
+- Reinstall: `pkg install proot-distro && proot-distro install debian` (or `--override-alias debian`).
+- Rootfs: `$PREFIX/var/lib/proot-distro/containers/debian/rootfs` (Termux recent layout uses `containers/`, not `installed-rootfs/`).
+- opencode: `proot-distro login debian -- /root/opencode` (v1.18.18 glibc binary).
+- codex: native Termux `~/.local/codex/codex` (rust-v0.147.0 musl STATIC - no Debian needed).
+
 ## Protected
 - `/root/models`, `/sdcard/Download/models`, `Models` — explicit permission from
   Sunny required to delete/move/overwrite.
