@@ -92,3 +92,16 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   NOT activated - Maven still on maintenance hold; activation when user resumes.
 - Proot agent versions to match in Termux: openclaw 2026.3.8, codex 0.147.0,
   opencode-ai 1.18.18, codexui-android 0.1.92.
+
+## 2026-08-16 (cont.) — OpenClaw (Milo) live in Termux (parallel instance)
+
+- Copied /root/.openclaw -> Termux ~/.openclaw-termux (profile "termux"; logs excluded;
+  secrets stay device-local, NOT in git). WhatsApp DISABLED in the copy
+  (channels.whatsapp + plugins.entries.whatsapp = false) - baileys code path inert.
+- Running: `openclaw --profile termux gateway --port 18790` (loopback, PID live,
+  canvas 18790, browser ctrl 18792, heartbeat + health-monitor up).
+- Proot's Milo untouched on default port (parallel). Cut-over/who-owns-what later.
+- Watchdog: ~/.termux/watch-openclaw.sh (1-min cron via tb) - verified "up".
+- Baileys advisory (GHSA-qvv5-jq5g-4cgg): rc.9 still installed (unused - WhatsApp
+  off). Plan: pin 7.0.0-rc12+ via npm overrides on WiFi before enabling WhatsApp.
+  NOTE proot Milo STILL runs WhatsApp on rc.9 - recommend pinning/disable before use.
