@@ -69,3 +69,16 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   ngl=40 p512 CRASH (rc=139); -ngl 999 always crashes. = high-ngl + long-prompt zone.
 - Stable serving config for now: `-ngl 24` (or per-model layer count minus headroom).
 - Headline ngl=24 pp512/tg32 bench pending (auto watcher runs when <=58C).
+
+## 2026-08-16 (cont.) — opencode-native feasibility: BLOCKED by Bun, not by us
+
+- Probed sst/opencode@main source: CLI (packages/opencode, v1.18.18) builds via
+  `bun run script/build.ts` -> `bun build --compile`. Targets emitted: linux
+  arm64/x64 (glibc), linux musl, darwin. NO android/bionic target exists.
+- Runtime is Bun; bin/opencode is a Node wrapper that spawns the compiled binary.
+  The dynamic glibc/musl binaries are a direct consequence of Bun's target list.
+- Verdict: opencode-native-on-bionic is blocked upstream (Bun has no Android
+  target), NOT a quick win. Debian layer remains ONLY for opencode. codex is
+  already native (musl static), openclaw/Maven are node-native, llama.cpp GPU
+  native. When Bun ships Android support, opencode-native becomes a one-liner.
+- Probe clone kept at /root/probe/o (shallow, sst/opencode@main).
