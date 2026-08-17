@@ -305,3 +305,25 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   test of one agent round-trip. Configs are syntax-validated. When cool:
   `tb exec 'bash ~/bin/agent-engine.sh start'` then
   curl 9090/v1/models, codex/opencode smoke, stop when done.
+## 2026-08-17 — CRITICAL: pinned Vulkan build CORRUPTS Q4_K_M output on GPU
+
+- Tested phi-4-mini AND qwen3-4b (both Q4_K_M): ANY GPU offload corrupts
+  generation. Output = repeated '@' up to max_tokens, for -ngl 1, 8, 16, 24;
+  flash-attn on/off; default vs q8_0 KV cache: identical garbage.
+- -ngl 0 (CPU-only) output is CORRECT (2+2 -> "4"). Model files are fine.
+- Verdict: the Vulkan compute path in pinned build (commit 650913862 + 3
+  patches) silently produces garbage for Q4_K_M on Adreno 830 - it does not
+  crash, it answers wrong. Health checks pass because the server responds;
+  this explains the earlier "chat works though struggle" reports. GPU was
+  NEVER actually usable on this build - critical correction to prior notes.
+- Rectify ladder: (1) rebuild llama.cpp from a newer commit (Vulkan/Q4_K_M
+  shader fixes), then re-run ngl ladder; (2) until then chat/agents run CPU
+  (-ngl 0) via agent-engine.sh (default now NGL=0); (3) optional test: Q8_0
+  or F16 quant on the current build - if non-Q4_K_M dequant avoids the broken
+  shaders we regain GPU without a rebuild.
+- agent-engine.sh fixed: setsid nohup + redirect on ONE line (previous sed
+  broke the line, $! was wrong and the server held the ssh session open);
+  readiness poll waits for /v1/models (model load ~5-15s); heat guard 78C;
+  NGL env selectable (default 0 = CPU verified; 16/24 only after rebuild).
+- Speed reference (phi-4-mini): CPU tg ~2.3 t/s / pp ~5 t/s but correct;
+  GPU tg ~7.3 t/s but garbage. Correctness beats speed until rebuild.

@@ -11,6 +11,9 @@ PIDF=$STATE/chat-gpu.pid
 PORT=9090
 mkdir -p "$STATE" "$LOG"
 : "${AGENT_MODEL:=phi-4-mini}"
+# NGL override: default 0 = CPU (verified correct). GPU corrupts Q4_K_M output on
+# the pinned llama.cpp build; retest with NGL=16/24 only after a Vulkan rebuild.
+: "${NGL:=0}"
 case "$AGENT_MODEL" in
   phi-4-mini) MODEL=$HOME/models/phi-4-mini-instruct-q4_k_m.gguf;      CTX=8192 ;;
   qwen3-4b)   MODEL=/sdcard/Download/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf; CTX=16384 ;;
@@ -37,16 +40,23 @@ start() {
   fi
   [ -f "$MODEL" ] || { echo "model missing: $MODEL" >&2; return 3; }
   export PATH=$PREFIX/bin:/system/bin:$PATH
-  setsid nohup "$BIN" -m "$MODEL" --host 127.0.0.1 --port "$PORT" -c "$CTX" \
-    --flash-attn on --parallel 1 -ngl 24 -t 4 --tools get_datetime,get_info \
-    > "$LOG/chat-gpu.log" 2>&1 < /dev/null &
+  local fa; fa="--flash-attn on"; [ "$NGL" = "0" ] && fa=""
+  setsid nohup "$BIN" -m "$MODEL" --host 127.0.0.1 --port "$PORT" -c "$CTX" --parallel 1 -ngl "$NGL" -t 4 $fa > "$LOG/chat-gpu.log" 2>&1 < /dev/null &
   echo $! > "$PIDF"
-  sleep 2
-  if kill -0 "$(cat "$PIDF")" 2>/dev/null; then
+  # readiness poll: model load takes ~10-15s on this phone
+  local tries=0 up=""
+  while [ "$tries" -lt 40 ]; do
+    if curl -s -m 3 "http://127.0.0.1:${PORT}/v1/models" >/dev/null 2>&1; then up=1; break; fi
+    if ! kill -0 "$(cat "$PIDF")" 2>/dev/null; then break; fi
+    sleep 1; tries=$((tries+1))
+  done
+  if [ -n "$up" ]; then
     echo "started model=${AGENT_MODEL} on 127.0.0.1:${PORT} (ctx ${CTX})"
     curl -s -m 5 "http://127.0.0.1:${PORT}/v1/models" | head -c 200; echo
   else
-    echo "failed to stay up - check $LOG/chat-gpu.log" >&2; rm -f "$PIDF"; return 1
+    echo "engine failed to become ready in ${tries}s - tail $LOG/chat-gpu.log" >&2
+    tail -5 "$LOG/chat-gpu.log" >&2
+    kill "$(cat "$PIDF")" 2>/dev/null; rm -f "$PIDF"; return 1
   fi
 }
 
