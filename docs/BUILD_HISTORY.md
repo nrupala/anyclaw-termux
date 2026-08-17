@@ -239,3 +239,20 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - Note: two ESTABLISHED WARP (192.0.0.8/172.18.x) connections to 43.175.230.151:8080
   - Cloudflare WARP tunnel active; modem/WARP traffic also contributes heat.
 - scripts/termux-llama-server.sh patched with --parallel 1 (repo + /sdcard staged).
+## 2026-08-17 (cont.) — Chat model unloaded (heat), CPU/GPU split explained
+
+- User approved unloading chat: Termux chat GPU server (9090, phi-4-mini)
+  stopped and its pid file cleared; verified no llama-server process remains
+  and embed RAG (9096, nomic) stays up. Gateway healthy; chat request now
+  returns "model cold start failed" (no local CPU engine spawns - external
+  chat marker keeps the launcher from starting a local one).
+- Why CPU shows when GPU serving: llama.cpp keeps CPU threads for prompt
+  processing/prefill/tokenization even with -ngl 24; on this Adreno 830 build
+  PP is largely CPU-bound (no matrix cores; bench: pp speed ~flat vs -ngl).
+  Generation math runs on Vulkan. ~30% CPU is transient per-request; idle ~0.
+- To bring chat back: `tb exec 'bash /sdcard/Download/termux-bridge/termux-llama-server.sh'`.
+  GAP (future): external cold-start isn't wired to relaunch the Termux GPU
+  script, so unloaded chat requires a manual reload (by Sunny or via agent).
+- Shizuku: NOT needed for normal ops now - Doze whitelist + appops persist
+  across reboots without the server. Keep installed; start only for privileged
+  actions (re-run termux-elevate.sh, dumpsys, UI automation).
