@@ -256,3 +256,24 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - Shizuku: NOT needed for normal ops now - Doze whitelist + appops persist
   across reboots without the server. Keep installed; start only for privileged
   actions (re-run termux-elevate.sh, dumpsys, UI automation).
+## 2026-08-17 (cont.) — Low-power daemon profile + user manual in Maven GUI
+
+- Maven now behaves as an on-demand intelligent engine: gateway 9095 +
+  scheduler always up (idle CPU ~0% for node gateway and python3 scheduler),
+  chat is optional and currently unloaded.
+- state/config.json `model_idle_stop_min: 5`: reasoning plugin stops chat after
+  5 idle minutes; restart of the Termux GPU engine remains manual by design
+  (external-chat.json marker keeps the launcher from spawning a local one, so
+  "model cold start failed" is the intended response while chat is unloaded).
+- Shipped `/docs` user-manual route to maven-assistant: lightweight markdown
+  renderer in gateway.js (headers/tables/code/list/links, HTML-escaped, zero
+  deps) serving docs/USER-MANUAL.md behind login like every other page.
+  Maven commits pushed: c22e6cd (manual route) + 1739b7f (low-power daemon).
+- Low-power daemon commits (maven-assistant): adaptive chat ctx
+  8192->16384 floor/ceiling from MemAvailable; THREADS 8->4; --flash-attn on;
+  launcher flock + maintenance hold; coder memory gate CODER_MEM_MIN_MB=6144
+  mirrored in launcher + watchdog; external-chat/coder/embed markers honored
+  by launcher and watchdog (no local CPU llama-server spawns).
+- Verified live: gateway restarted on new code at 0.0.0.0:9095, /api/health
+  200, /docs wired (302->/login unauthenticated). Battery ~79% charging, core
+  43.2C, max thermal zone ~73.5C (cooling from 77-84C).
