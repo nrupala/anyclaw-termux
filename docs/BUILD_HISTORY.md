@@ -327,3 +327,21 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   NGL env selectable (default 0 = CPU verified; 16/24 only after rebuild).
 - Speed reference (phi-4-mini): CPU tg ~2.3 t/s / pp ~5 t/s but correct;
   GPU tg ~7.3 t/s but garbage. Correctness beats speed until rebuild.
+
+
+## 2026-08-17 - WhatsApp unlinked from Milo (Termux + proot)
+
+- Why: two unpaired contacts DM'd Milo's WhatsApp line (~7:21p and ~7:31p
+  MST on 08-16); the `dmPolicy: pairing` flow auto-replied to each with a
+  pairing code, which showed up as "Milo pinging <contact> to pair". Codes
+  were never completed, so neither contact gained any access.
+- Action (owner-requested): disconnect WhatsApp entirely.
+- Termux (profile termux, gateway 18790): channels.whatsapp.enabled + plugins.
+  entries.whatsapp.enabled -> false; WhatsApp session credentials and the
+  pairing-request store moved out of active use to
+  ~/backups/whatsapp-unlink-2026-08-17/ (recoverable; also covered by the
+  daily termux backup). Gateway restarted; startup log shows NO whatsapp init.
+- Proot (gateway 18789): same config flags set false as precaution (it holds
+  no WhatsApp session credentials anyway; takes effect on next restart).
+- Re-link later if ever wanted: restore creds from the backup folder, set both
+  flags true, restart the gateway, re-scan QR.
