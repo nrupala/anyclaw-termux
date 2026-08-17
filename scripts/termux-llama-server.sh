@@ -11,7 +11,7 @@ PORT_EMBED=9096
 # -ngl 24 measured: pp512 11.75 t/s, tg32 7.50 t/s (CPU baseline 4.98/2.32).
 echo "starting chat GPU server on 127.0.0.1:${PORT_CHAT} (ngl=24, fa on, ctx 8192)"
 setsid nohup "$BIN" -m "$MODEL_CHAT" --host 127.0.0.1 --port "$PORT_CHAT" \
-  -c 8192 --flash-attn on -ngl 24 -t 4 > "$HOME/logs/chat-gpu.log" 2>&1 < /dev/null &
+  -c 8192 --flash-attn on --parallel 1 -ngl 24 -t 4 > "$HOME/logs/chat-gpu.log" 2>&1 < /dev/null &
 echo $! > "$HOME/state/chat-gpu.pid"
 sleep 2
 echo "starting embed GPU server on 127.0.0.1:${PORT_EMBED} (ngl=24)"

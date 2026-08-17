@@ -222,3 +222,20 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   skipped: another launcher is running"; cleared). /root/maven launcher files
   (launch-common.sh, launch-maven.sh, maven-watchdog.sh, maven-build-log.md)
   have UNCOMMITTED in-progress edits - left untouched.
+## 2026-08-17 — Two Maven UIs (APK + browser) on 9095 + heat tune
+
+- User has Maven open in the APK (com.maven.assistant 0.6.3) AND a browser;
+  both target the same gateway 127.0.0.1:9095. Confirmed single backend, two
+  clients - by design (APK is a web client of the same gateway). Each client
+  keeps its own token storage; the 7-day login fix (cf2a552) applies per client.
+- Old 6-Aug build verification: netstat via shizuku shows NO listeners on
+  8080-8085; only one maven package installed (com.maven.assistant 0.6.3) -
+  the legacy build is already gone. Only stack listeners: 9090/9095/9096
+  (+openclaw 18790-18793, sshd 8022).
+- Heat: cores hit 77-84C with chat GPU server active (28-32% CPU = 4 prompt
+  threads). Applied single KV slot: chat restarted with --parallel 1
+  (same ctx 8192, fa on, ngl 24, -t 4). Temps: 84 -> 77 -> 73C. If still hot:
+  lower to -t 2 or ctx 4096 (user decision).
+- Note: two ESTABLISHED WARP (192.0.0.8/172.18.x) connections to 43.175.230.151:8080
+  - Cloudflare WARP tunnel active; modem/WARP traffic also contributes heat.
+- scripts/termux-llama-server.sh patched with --parallel 1 (repo + /sdcard staged).
