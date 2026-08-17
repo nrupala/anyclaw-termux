@@ -1,0 +1,7 @@
+# Append to ~/.codex/config.toml (proot + Termux copies kept in sync).
+[model_providers.local]
+name = "Local llama.cpp (Termux GPU)"
+base_url = "http://127.0.0.1:9090/v1"
+env_key = "LOCAL_LLM_KEY"
+wire_api = "chat"
+# run: export LOCAL_LLM_KEY=local; codex --provider local -m phi-4-mini

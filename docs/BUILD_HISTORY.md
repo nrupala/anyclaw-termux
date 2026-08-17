@@ -277,3 +277,31 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
 - Verified live: gateway restarted on new code at 0.0.0.0:9095, /api/health
   200, /docs wired (302->/login unauthenticated). Battery ~79% charging, core
   43.2C, max thermal zone ~73.5C (cooling from 77-84C).
+## 2026-08-17 — Local llama.cpp for ALL agents (codex + opencode + openclaw)
+
+- Goal: run every agent on-device on our own models (no provider rate limits,
+  no mobile-data LLM calls). Winner vs. any proxy: plain llama.cpp directly,
+  the same engine Maven uses - agents bypass the gateway and hit
+  `http://127.0.0.1:9090/v1` (Termux llama-server, loopback is shared).
+- Model policy (power/heat/quality): phi-4-mini (2.49GB) DEFAULT - lowest power,
+  great quality/speed for chat+agents; qwen3-4b (2.5GB, ctx 16384) for stronger
+  agentic/tool fidelity; qwen2.5-coder-7b only on 9091 when cool (thermal/RAM
+  gated). One engine loaded at a time.
+- codex (~/.codex/config.toml proot + Termux): added [model_providers.local]
+  wire_api="chat", env_key=LOCAL_LLM_KEY (exported in .bashrc both sides).
+  Run: `LOCAL_LLM_KEY=local codex --provider local -m phi-4-mini [--model qwen3-4b]`.
+- opencode (~/.config/opencode/opencode.jsonc proot + Debian rootfs copy):
+  provider "local" (@ai-sdk/openai-compatible, baseURL 9090/v1) with
+  phi-4-mini / qwen3-4b / qwen2.5-coder-7b; agent "local" = minimal on-device
+  toolset (bash/read/edit/glob/grep). Run: `opencode run -m local/phi-4-mini`.
+- openclaw (proot ~/.openclaw + Termux ~/.openclaw-termux): openai-compatible
+  provider baseUrl -> 127.0.0.1:9090/v1, models phi-4-mini + qwen3-4b,
+  default primary openai-compatible/phi-4-mini. OpenRouter/OpenAI keys kept as
+  fallback profiles; llama.cpp ignores the Authorization header.
+- scripts/agent-engine.sh (Termux, also staged /sdcard/Download/termux-bridge/
+  and ~/bin): start|stop|status for the 9090 engine, AGENT_MODEL select,
+  heat guard >=78C refuses start, pidfile shared with Maven chat (chat-gpu.pid).
+- PENDING (blocked by heat, max zone 80.7C and rising/charging): live smoke
+  test of one agent round-trip. Configs are syntax-validated. When cool:
+  `tb exec 'bash ~/bin/agent-engine.sh start'` then
+  curl 9090/v1/models, codex/opencode smoke, stop when done.

@@ -1,0 +1,15 @@
+// In ~/.config/opencode/opencode.json(c): provider "local" (OpenAI-compatible).
+{
+  "provider": {
+    "local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local llama.cpp (Termux GPU)",
+      "options": { "baseURL": "http://127.0.0.1:9090/v1" },
+      "models": {
+        "phi-4-mini": { "name": "Phi-4-mini (local)", "limit": { "context": 8192, "output": 4096 }, "options": {} },
+        "qwen3-4b": { "name": "Qwen3-4B (local)", "limit": { "context": 16384, "output": 4096 }, "options": {} }
+      }
+    }
+  }
+}
+// run: opencode run -m local/phi-4-mini "..."   (default picks loaded model)

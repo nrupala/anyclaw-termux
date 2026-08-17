@@ -1,0 +1,15 @@
+// OpenClaw ~/.openclaw/agents/main/agent/models.json (also ~/.openclaw-termux on
+// Termux): point the openai-compatible provider at llama.cpp, keep env apiKey.
+"providers": {
+  "openai-compatible": {
+    "baseUrl": "http://127.0.0.1:9090/v1",
+    "apiKey": "${OPENAI_COMPAT_API_KEY}",
+    "models": [
+      { "id": "phi-4-mini", "api": "openai-completions", "reasoning": false, "input": ["text"],
+        "cost": { "input": 0, "output": 0 }, "contextWindow": 8192, "maxTokens": 4096 },
+      { "id": "qwen3-4b", "api": "openai-completions", "reasoning": false, "input": ["text"],
+        "cost": { "input": 0, "output": 0 }, "contextWindow": 16384, "maxTokens": 4096 }
+    ]
+  }
+}
+// openclaw.json: agents.defaults.model.primary = "openai-compatible/phi-4-mini"
