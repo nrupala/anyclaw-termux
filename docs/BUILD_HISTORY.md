@@ -345,3 +345,26 @@ Dated log of builds, ports, and decisions. Append per session; never rewrite his
   no WhatsApp session credentials anyway; takes effect on next restart).
 - Re-link later if ever wanted: restore creds from the backup folder, set both
   flags true, restart the gateway, re-scan QR.
+
+
+## 2026-08-17 - Vulkan rebuild (b10453) started after Q8_0 also corrupts
+
+- Q8_0 quant test: phi-4-mini requantized to Q8_0 (4.08GB) and served with
+  -ngl 16 -> output still garbage. Conclusion: the corruption is NOT Q4_K_M
+  dequant-specific; the pinned build's ggml-vulkan compute path is broken on
+  this Adreno 830 driver (no runtime GGML_VULKAN_* workaround knobs exist in
+  that build). Rebuild is required.
+- Pinned build preserved: ~/llama.cpp/build-pinned-650913862/ (binaries also
+  copied to ~/backups/llama-bin-pinned-650913862/) so CPU fallback is intact.
+- Checked out b10453 (2026-08-16, "model : remove some ggml_concat"). Shallow
+  fetch only (source, not models - small data).
+- Patches adapted for b10453: flash_attn_cm2.comp no longer exists upstream;
+  coopmat probes renamed to GL_NV_cooperative_matrix_decode_vector
+  (coopmat2_decode_vector.comp); removed BOTH coopmat probe blocks from
+  CMakeLists.txt (Adreno 830 reports no matrix cores, so they are useless);
+  -O drop at vulkan-shaders-gen.cpp:352 still applies.
+- Build running: bash /sdcard/Download/termux-bridge/build-vulkan.sh (2 cores,
+  heat watcher pauses >58C / resumes <52C). Progress: tail ~/llama.cpp/build.log;
+  completion marker: ~/llama.cpp/build.done (done-0 = success).
+- After build: re-run ngl ladder correctness test (phi-4-mini Q4_K_M), then set
+  agent-engine.sh default NGL accordingly.
