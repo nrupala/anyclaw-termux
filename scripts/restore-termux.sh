@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Restore Termux home from latest backup. Run from Termux.
 export PATH=$PREFIX/bin:/system/bin:$PATH
 DEST=/sdcard/Download/backups/termux

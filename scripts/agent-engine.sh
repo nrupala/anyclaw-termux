@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Local agent + Maven chat engine (llama.cpp, Termux, Vulkan GPU).
 # Serves OpenAI-compatible http://127.0.0.1:9090/v1 for codex/opencode/openclaw
 # AND Maven chat on 9090. One engine at a time, lowest-power model by default.
