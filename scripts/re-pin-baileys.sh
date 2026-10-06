@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Re-pin @whiskeysockets/baileys to 7.0.0-rc12 for the global openclaw install.
 # Fixes GHSA-qvv5-jq5g-4cgg (apply again after any `npm update -g openclaw`).
 set -euo pipefail

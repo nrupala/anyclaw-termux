@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Maven GPU engines in Termux (native Vulkan). Run via: bash scripts/termux-llama-server.sh
 # Delegation: Maven gateway stays on 127.0.0.1:9095; these serve 9090 (chat) / 9096 (embed).
 export PATH=$PREFIX/bin:/system/bin:$PATH

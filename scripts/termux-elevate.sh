@@ -1,4 +1,5 @@
 #!/system/bin/sh
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Elevate the Termux stack (and AnyClaw host) to Google-Play-services-like
 # resilience: Doze whitelist + background/foreground appops. Survives reboots.
 # Run from proot once Shizuku is running:

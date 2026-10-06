@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# Copyright (c) 2026 Nrupal Akolkar. All rights reserved. See LICENSE.md.
 # Daily backup of Termux home -> /sdcard/Download/backups/termux (survives AnyClaw reinstalls)
 # Mirrors proot backup.sh conventions: timestamped tarball + state + components, prune old.
 export PATH=$PREFIX/bin:/system/bin:$PATH
